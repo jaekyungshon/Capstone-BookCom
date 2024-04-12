@@ -1,0 +1,19 @@
+import React from "react";
+import Card from 'react-bootstrap/Card';
+
+function SectionCardBoardRecommend(props) {
+    return (
+        <Card className="text-center" style={{width:`${props.stylewidth}`}}>
+            <Card.Header>{props.cardHeader}</Card.Header>
+            <Card.Body style={{ display: 'flex', flexDirection: 'row' }}>
+                {props.bodyContent.map((item,index) => (
+                    <div key={index} className="card-item" style={{ flex: '1' }}>
+                        {item}
+                    </div>
+                ))}
+            </Card.Body>
+        </Card>
+    );
+}
+
+export default SectionCardBoardRecommend;
