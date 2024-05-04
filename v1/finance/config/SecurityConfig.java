@@ -1,10 +1,10 @@
-package com.capstone.finance.config;
+package com.capstone.finance.Config;
 
-import com.capstone.finance.jwt.JwtAccessDeniedHandler;
-import com.capstone.finance.jwt.JwtAuthenticationEntryPoint;
-//import com.capstone.finance.jwt.JwtSecurityConfig;
-import com.capstone.finance.jwt.TokenProvider;
-import com.capstone.finance.jwt.JwtFilter;
+import com.capstone.finance.JWT.JwtAccessDeniedHandler;
+import com.capstone.finance.JWT.JwtAuthenticationEntryPoint;
+import com.capstone.finance.JWT.JwtSecurityConfig;
+import com.capstone.finance.JWT.TokenProvider;
+import com.capstone.finance.JWT.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,12 +48,13 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers("/api/**").permitAll()
+                                .requestMatchers("/api/chatbot/**").authenticated()// 인증하지 않고 접근하려하면 401 리턴
+
                 )
                 .addFilterBefore(
                         new JwtFilter(tokenProvider),
                         UsernamePasswordAuthenticationFilter.class
                 );
-                //.apply(new JwtSecurityConfig(tokenProvider));
 
         return http.build();
     }
