@@ -1,15 +1,15 @@
-package com.capstone.finance.service;
+package com.capstone.finance.Service;
 
-import com.capstone.finance.dao.MemberRepository;
-import com.capstone.finance.dao.RefreshTokenRepository;
-import com.capstone.finance.dto.Member.LoginDto;
-import com.capstone.finance.dto.Member.MemberRequestDto;
-import com.capstone.finance.dto.Member.MemberResponseDto;
-import com.capstone.finance.dto.Token.TokenReqDto;
-import com.capstone.finance.dto.Token.TokenResDto;
-import com.capstone.finance.jwt.TokenProvider;
-import com.capstone.finance.model.Member;
-import com.capstone.finance.model.RefreshToken;
+import com.capstone.finance.DAO.MemberRepository;
+import com.capstone.finance.DAO.RefreshTokenRepository;
+import com.capstone.finance.DTO.Member.LoginDto;
+import com.capstone.finance.DTO.Member.MemberRequestDto;
+import com.capstone.finance.DTO.Member.MemberResponseDto;
+import com.capstone.finance.DTO.Token.TokenReqDto;
+import com.capstone.finance.DTO.Token.TokenResDto;
+import com.capstone.finance.JWT.TokenProvider;
+import com.capstone.finance.Entity.Member;
+import com.capstone.finance.Entity.RefreshToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -28,9 +28,6 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-
-    //private final SmtpEmailService smtpEmailService;
-    private final MemberService memberService;
 
     @Transactional
     public MemberResponseDto signup(MemberRequestDto memberRequestDto) {
@@ -105,23 +102,5 @@ public class AuthService {
         // 토큰 발급
         return tokenResDto;
     }
-/*
-    @Transactional
-    public void issueTempPassword(String username, String nickname) {
-        Member member = memberService.findMemberByUsername(username);
 
-        if(!member.getNickname().equals(nickname)){
-            throw new RuntimeException("입력한 닉네임이 사용자의 닉네임과 일치하지 않습니다.");
-        }
-
-        String tempPassword = generateTempPassword();
-        member.setPassword(passwordEncoder.encode(tempPassword));
-        memberRepository.save(member);
-
-        smtpEmailService.sendTempPassword(member.getUsername(), tempPassword);
-    }
-*/
-    private String generateTempPassword() {
-        return UUID.randomUUID().toString().substring(0, 8);
-    }
 }
