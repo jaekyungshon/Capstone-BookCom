@@ -1,34 +1,30 @@
-package com.capstone.finance.model;
+package com.capstone.finance.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "refresh_token")
-public class RefreshToken {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "verificationToken")
+public class VerificationToken {
 
     @Id
-    @Column(name = "refresh_key")
-    private String key;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @Column(name = "refresh_value")
-    private String value;
+    private String verificationCode;
+    private LocalDateTime expiryDate;
 
-    @Builder
-    public RefreshToken(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
+    @OneToOne(targetEntity = Member.class, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, name = "member_id")
+    private Member member;
 
-    public RefreshToken updateValue(String token) {
-        this.value = token;
-        return this;
-    }
 }
