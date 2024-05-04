@@ -60,7 +60,7 @@ function NavBar(props) {
             if (response.status === 200) {
 
 
-                document.location.href = '/login';
+                document.location.href = '/chatbot';
 
             }
         } catch (error) {
