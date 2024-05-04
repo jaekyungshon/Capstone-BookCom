@@ -33,46 +33,13 @@ public class VerificationTokenService {
 
     }
 
-    @Value("${jwt.secret}") // application.properties의 jwt.secret 값 가져오기
-    private String secretKey; // 토큰 서명에 사용되는 비밀키
-
     public boolean validateToken(String token) {
-        try {
-            // Base64 디코딩하여 byte[]로 변환
-            byte[] keyBytes = Base64.getDecoder().decode(secretKey);
-
-            Claims claims = Jwts.parserBuilder() // parserBuilder 사용
-                    .setSigningKey(keyBytes) // byte[] 형식의 키 사용
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            // 토큰이 만료되었는지 확인
-            long expirationTime = claims.getExpiration().getTime();
-            long currentTime = System.currentTimeMillis();
-            return expirationTime > currentTime; // 만료되지 않았으면 true 반환
-
-        } catch (ExpiredJwtException e) {
-            // 토큰이 만료된 경우
-            return false;
-        } catch (JwtException e) {
-            // 서명 오류 또는 기타 JWT 관련 오류가 있는 경우
-            return false;
-        } catch (Exception e) {
-            // 기타 예외가 발생한 경우
-            return false;
-        }
-    }
-
-    public Member verifyEmail(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByVerificationCode(token);
 //        not null & 아직 유효한 시간대 이내일때
-        if ((verificationToken != null) && verificationToken.getExpiryDate().isAfter(LocalDateTime.now())) {
-            Member member = verificationToken.getMember();
-            verificationTokenRepository.delete(verificationToken);
-            return member;
+        if (verificationToken == null || verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            return false; // 토큰이 없거나 만료된 경우
         }
-        return null;
+        return true; // 유효한 토큰인 경우
     }
 
     private LocalDateTime calculateExpiryDate() {
